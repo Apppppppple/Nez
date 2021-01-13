@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Nez.Systems;
 using Nez.Textures;
@@ -402,7 +403,8 @@ namespace Nez
 			// update our SceneComponents
 			for (var i = _sceneComponents.Length - 1; i >= 0; i--)
 			{
-				if (_sceneComponents.Buffer[i].Enabled)
+				// if enabled and doesn't have the UpdateAfterEntities attribute.
+				if (_sceneComponents.Buffer[i].Enabled && Attribute.GetCustomAttributes(_sceneComponents.Buffer[i].GetType(), typeof(UpdateAfterEntitiesAttribute)) == null)
 					_sceneComponents.Buffer[i].Update();
 			}
 
@@ -411,6 +413,13 @@ namespace Nez
 
 			// we update our renderables after entity.update in case any new Renderables were added
 			RenderableComponents.UpdateLists();
+
+			for (var i = _sceneComponents.Length - 1; i >= 0; i--)
+			{
+				// if enabled and has the UpdateAfterEntities attribute.
+				if (_sceneComponents.Buffer[i].Enabled && Attribute.GetCustomAttributes(_sceneComponents.Buffer[i].GetType(), typeof(UpdateAfterEntitiesAttribute)) != null)
+					_sceneComponents.Buffer[i].Update();
+			}
 		}
 
 		internal void Render()
