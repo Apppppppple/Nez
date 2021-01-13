@@ -6,7 +6,7 @@ namespace Nez
 	/// <summary>
 	/// Specifies that the <see cref="SceneComponent"/> should be updated after Entities.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class)]
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 	public class UpdateAfterEntitiesAttribute : Attribute { }
 
 	public class SceneComponent : IComparable<SceneComponent>
